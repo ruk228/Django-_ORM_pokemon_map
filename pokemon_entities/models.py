@@ -5,7 +5,10 @@ from django.utils.timezone import localtime
 # your models here
 
 class Pokemon(models.Model):
-    name = models.TextField(max_length=200, blank=True)#blank=True убрать
+    name = models.TextField(max_length=25, blank=True)#blank=True убрать
+    name_en = models.TextField(max_length=25, blank=True)
+    name_jp = models.TextField(max_length=25, blank=True)
+    name = models.TextField(max_length=25, blank=True)
     image = models.ImageField(null=True, blank=True)
 
     def __str__(self):

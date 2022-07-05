@@ -50,8 +50,8 @@ def get_information_pokemons(request):
                 'title_ru': 'Ивизавр'
             },
             'pokemon_id': pokemon_entity.author.id,
-            'title_en': 'Bulbasaur',
-            'title_jp': 'フシギダネ',
+            'title_en': pokemon.name_en,
+            'title_jp': pokemon.name_jp,
             'title_ru': pokemon.name
         })
 
