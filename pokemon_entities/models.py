@@ -8,7 +8,6 @@ class Pokemon(models.Model):
     name = models.TextField(max_length=25, blank=True)#blank=True убрать
     name_en = models.TextField(max_length=25, blank=True)
     name_jp = models.TextField(max_length=25, blank=True)
-    name = models.TextField(max_length=25, blank=True)
     image = models.ImageField(null=True, blank=True)
 
     def __str__(self):
@@ -16,7 +15,7 @@ class Pokemon(models.Model):
 
 
 class PokemonEntity(models.Model):
-    author = models.ForeignKey(Pokemon, null=True, on_delete=models.CASCADE)#null=True убрать
+    author = models.ForeignKey('Pokemon', null=True, on_delete=models.CASCADE, related_name='pokemon')#null=True убрать изменить название pokemon => name_pokemon
     description = models.TextField(null=True)
     lat = models.FloatField(null=True)
     low = models.FloatField(null=True)
@@ -27,3 +26,6 @@ class PokemonEntity(models.Model):
     strength = models.IntegerField(null=True)
     defencer = models.IntegerField(null=True)
     stamina = models.IntegerField(null=True)
+
+    def __str__(self):
+        return '{}'.format(self.author)
