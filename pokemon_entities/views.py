@@ -102,11 +102,11 @@ def show_pokemon(request, pokemon_id):
     pokemon_entity = pokemons_entity[pokemon_id-1]
 
     try:
-        previous_pokemon = pokemons_entity[pokemon_id-2]
+        previous_pokemon_entity = Pokemon.objects.get(id=pokemon_id)
         previous_evolution = {
-            "title_ru": previous_pokemon.author.name,
-            "pokemon_id": previous_pokemon.id,
-            "img_url": request.build_absolute_uri('../../media/{}'.format(previous_pokemon.author.image))#проблемаа с  author
+            "title_ru": previous_pokemon_entity.name,
+            "pokemon_id": previous_pokemon_entity.id,
+            "img_url": request.build_absolute_uri('../../media/{}'.format(previous_pokemon_entity.image))#проблемаа с  author
         }
     except:
         previous_evolution = {}
