@@ -1,5 +1,4 @@
 import folium
-import json
 
 from .models import PokemonEntity, Pokemon
 from django.http import HttpResponseNotFound
@@ -23,50 +22,8 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
     )
     folium.Marker(
         [lat, lon],
-        # Warning! `tooltip` attribute is disabled intentionally
-        # to fix strange folium cyrillic encoding bug
         icon=icon,
     ).add_to(folium_map)
-
-
-def get_information_pokemons(request, pokemon_id=True):
-    entities = []
-    pokemons_info = []
-    pokemons_entity = PokemonEntity.objects.filter(disappeared_at__gte=localtime(), appeared_at__lte=localtime())
-
-    for pokemon_entity in pokemons_entity:
-
-        #nex_pokemon_entity = PokemonEntity.objects.filter(isappeared_at__gte=localtime(), appeared_at__lte=localtime())
-        #print(nex_pokemon_entity)
-        next_evolution = {
-                    "title_ru": pokemon_entity.author.name,
-                    "pokemon_id": pokemon_entity.id,
-                    "img_url": request.build_absolute_uri('media/{}'.format(pokemon_entity.author.image))
-                }
-        previous_evolution = {
-                    "title_ru": "Бульбазавр",
-                    "pokemon_id": 1,
-                    "img_url": "https://upload.wikimedia.org/wikipedia/ru/c/ca/%D0%91%D1%83%D0%BB%D1%8C%D0%B1%D0%B0%D0%B7%D0%B0%D0%B2%D1%80.png"
-                }
-        entities = {
-            'lat': pokemon_entity.lat,
-            'level': pokemon_entity.level,
-            'lon': pokemon_entity.low
-        }
-        pokemons_info.append(
-            {
-                "pokemon_id": pokemon_id,
-                "title_ru": pokemon_entity.author.name,
-                "title_en": pokemon_entity.author.name_en,
-                "title_jp": pokemon_entity.author.name_jp,
-                "description": pokemon_entity.description,
-                "img_url": request.build_absolute_uri('media/{}'.format(pokemon_entity.author.image)),
-                "entities": entities,
-                "next_evolution": next_evolution,
-                "previous_evolution": previous_evolution
-            }
-        )
-    return pokemons_info
 
 
 def show_all_pokemons(request):
@@ -106,7 +63,7 @@ def show_pokemon(request, pokemon_id):
         previous_evolution = {
             "title_ru": previous_pokemon_entity.name,
             "pokemon_id": previous_pokemon_entity.id,
-            "img_url": request.build_absolute_uri('../../media/{}'.format(previous_pokemon_entity.image))#проблемаа с  author
+            "img_url": request.build_absolute_uri('../../media/{}'.format(previous_pokemon_entity.image))
         }
     except:
         previous_evolution = {}
@@ -123,29 +80,23 @@ def show_pokemon(request, pokemon_id):
 
     pokemons.append(
         {
-        'pokemon_id': pokemon_entity.id,
-        'title_ru': pokemon_entity.author.name,
-        'title_en': pokemon_entity.author.name_en,
-        'title_jp': pokemon_entity.author.name_jp,
-        'description': pokemon_entity.description,
-        'img_url': request.build_absolute_uri('../../media/{}'.format(pokemon_entity.author.image)),
-        'entities': [#исправить(добавить append параметрво покемонов если хи больше 1-го)
-            {
-            'level': pokemon_entity.level,
-            'lat': pokemon_entity.lat,
-            'lon': pokemon_entity.low
-            },
-            {
-            'level': pokemon_entity.level,
-            'lat': pokemon_entity.lat,
-            'lon': pokemon_entity.low
-            }
-            ],
-        "next_evolution": next_evolution,
-        'previous_evolution': previous_evolution
+            'pokemon_id': pokemon_entity.id,
+            'title_ru': pokemon_entity.author.name,
+            'title_en': pokemon_entity.author.name_en,
+            'title_jp': pokemon_entity.author.name_jp,
+            'description': pokemon_entity.description,
+            'img_url': request.build_absolute_uri('../../media/{}'.format(pokemon_entity.author.image)),
+            'entities': [
+                {
+                    'level': pokemon_entity.level,
+                    'lat': pokemon_entity.lat,
+                    'lon': pokemon_entity.low
+                },
+                ],
+            "next_evolution": next_evolution,
+            'previous_evolution': previous_evolution
         },
     )
-
 
     for pokemon in pokemons:
         if pokemon['pokemon_id'] == int(pokemon_id):
@@ -165,4 +116,3 @@ def show_pokemon(request, pokemon_id):
     return render(request, 'pokemon.html', context={
         'map': folium_map._repr_html_(), 'pokemon': pokemon
     })
-

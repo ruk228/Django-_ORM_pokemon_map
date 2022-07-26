@@ -5,17 +5,17 @@ from django.utils.timezone import localtime
 # your models here
 
 class Pokemon(models.Model):
-    name = models.TextField(max_length=25, blank=True)#blank=True убрать
+    name = models.TextField(max_length=25, blank=True)
     name_en = models.TextField(max_length=25, blank=True)
     name_jp = models.TextField(max_length=25, blank=True)
-    image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(blank=True)
 
     def __str__(self):
         return '{}'.format(self.name)
 
 
 class PokemonEntity(models.Model):
-    author = models.ForeignKey('Pokemon', verbose_name='Покемон', null=True, on_delete=models.CASCADE, related_name='pokemon')#null=True убрать изменить название pokemon => name_pokemon
+    author = models.ForeignKey('Pokemon', verbose_name='Покемон', blank=True, on_delete=models.CASCADE, related_name='pokemon')
     description = models.TextField(null=True, verbose_name='Описание')
     lat = models.FloatField(null=True, verbose_name='Широта')
     low = models.FloatField(null=True, verbose_name='Долгота')
